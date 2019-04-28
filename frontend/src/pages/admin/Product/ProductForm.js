@@ -1,6 +1,7 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
+import axios from 'axios';
 
-class ProductForm extends PureComponent {
+class ProductForm extends Component {
   constructor() {
     super();
     this.state = {
@@ -13,9 +14,25 @@ class ProductForm extends PureComponent {
     this.props.addVariant();
   }
 
-  onFormSubmit = e => {
-    e.preventDefault();
-  };
+    onFormSubmit = e => {
+      e.preventDefault();
+
+      const {data: {name, variants}} = this.props;
+      const config = {
+        headers: {
+          'content-type' : 'multipart/form-data'
+        }
+      }
+
+      const formData = new FormData();
+      formData.append('name',name)
+      formData.append('variants',JSON.stringify(variants))
+
+
+      axios.post('http://localhost:8000/api/products', formData, config).then(Response =>{
+        console.log(Response)
+      })
+    };
 
   render () {
     const {
